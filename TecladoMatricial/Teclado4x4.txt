@@ -1,0 +1,87 @@
+
+Práctica: Control de Acceso con Tarjeta RFID y Teclado 4x4
+
+Objetivo General
+Desarrollar un sistema de acceso seguro utilizando un módulo lector RFID RC522, un teclado matricial 4x4 y un servomotor, de manera que el usuario presente primero una tarjeta válida y posteriormente ingrese un PIN para abrir una puerta simulada mediante el movimiento del servomotor.
+
+Fundamento Teórico
+Módulo RFID RC522
+El módulo RFID (Radio Frequency Identification) es utilizado para leer tarjetas o llaveros de proximidad mediante ondas electromagnéticas. Cada tarjeta posee un identificador único llamado UID que permite distinguirla de otras.
+El módulo RC522 se comunica con el Arduino mediante el protocolo SPI y entrega al programa el UID leído para verificar si corresponde a una tarjeta autorizada.
+Teclado matricial 4x4
+Es un sistema de entrada compuesto por 16 teclas organizadas en 4 filas y 4 columnas. El Arduino detecta cada tecla mediante patrones de lectura activando filas y revisando columnas. Se usa para el ingreso de contraseñas u opciones.
+Servomotor
+Un servomotor permite controlar el movimiento angular en forma precisa. En esta práctica simula la apertura y cierre de una puerta.
+El sistema programado abre la puerta únicamente si:
+1.	Se detecta primero una tarjeta autorizada.
+2.	El usuario ingresa un código correcto desde el teclado.
+
+
+
+
+Materiales Utilizados
+•	Arduino Uno
+•	Lector RFID RC522
+•	Tarjeta o llavero RFID
+•	Teclado matricial 4x4
+•	Servomotor
+•	Protoboard y cables
+
+Funcionamiento del Sistema
+1.	El Arduino permanece esperando que una tarjeta RFID sea presentada.
+2.	Cuando el usuario aproxima una tarjeta al lector:
+o	El programa obtiene el UID.
+o	Se compara con una lista de tarjetas autorizadas.
+3.	Si la tarjeta no es válida, el sistema lo indica por monitor serial.
+4.	Si la tarjeta es válida, el sistema habilita la entrada de contraseña desde el teclado 4x4.
+5.	El usuario debe ingresar el PIN configurado.
+6.	Si el PIN es correcto:
+o	El servomotor gira a 90° simulando la apertura de la puerta.
+o	Transcurrido el tiempo programado, regresa a la posición original (0°) cerrando la puerta.
+7.	Si el PIN es incorrecto, el acceso se niega y el sistema reinicia.
+Este proceso brinda un doble método de autenticación, aumentando la seguridad.
+
+
+
+Explicación del Código
+El código está dividido por módulos:
+Lectura RFID
+El programa detecta una nueva tarjeta y almacena su UID en una cadena.
+Luego compara el UID con una lista almacenada:
+String tarjetasAutorizadas[] = {
+  "C9 A2 65 A2",
+  "B3 7A 5C 12"
+};
+Si coincide, se habilita el ingreso del PIN.
+Ingreso de contraseña
+Se lee cada tecla y se va construyendo la clave ingresada.
+El ingreso finaliza automáticamente cuando se completan los dígitos.
+Apertura de la puerta
+Si la contraseña es correcta, se ejecuta la función:
+abrirServo();
+donde se mueve el servo primero a 90° (abrir) y luego regresa a 0° (cerrar).
+
+
+
+
+
+
+
+
+
+Diagrama de Conexiones 
+Conexiones RFID RC522
+•	SDA → Pin 10
+•	RST → Pin 9
+•	MOSI → Pin 11
+•	MISO → Pin 12
+•	SCK → Pin 13
+•	VCC → 3.3 V
+•	GND → GND
+Conexiones teclado 4x4
+•	Filas → D2, D3, D4, D5
+•	Columnas → D6, D7, D8, A1
+Servomotor
+•	Señal → A0
+•	VCC → 5V
+•	GND → GND
